@@ -1,0 +1,544 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LinguaBridge AI — Your Language Coach</title>
+<style>
+:root {
+  --ink:#202344; --muted:#777c96; --blue:#5267ed;
+  --coral:#ff806e; --green:#19b98b; --bg:#f5f7ff;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;color:var(--ink);
+  font-family:Inter,"Segoe UI",Arial,sans-serif;
+  background:linear-gradient(135deg,#f3f5ff,#fff5f0 55%,#effcf8);
+}
+header{
+  max-width:1200px;margin:auto;padding:24px 28px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800;font-size:21px}
+.logo{
+  width:43px;height:43px;border-radius:15px;
+  display:grid;place-items:center;color:white;font-size:23px;
+  background:linear-gradient(135deg,#5368ef,#9c67e9);
+  box-shadow:0 7px 18px #6674ed45;
+}
+.pill{background:white;padding:10px 16px;border-radius:30px;
+  color:var(--green);font-size:12px;font-weight:800;
+  box-shadow:0 4px 18px #26305b0c}
+main{max-width:1120px;margin:25px auto 60px;padding:0 22px}
+.hero{text-align:center;margin:25px 0 30px}
+.eyebrow{color:var(--blue);font-size:12px;font-weight:900;letter-spacing:2px}
+h1{font-size:clamp(32px,5vw,49px);line-height:1.1;margin:13px 0}
+h1 span{color:var(--blue)}
+.subtitle{color:var(--muted);font-size:16px;line-height:1.6}
+.layout{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(240px,.8fr);gap:22px}
+.panel{
+  background:#ffffffd9;border:1px solid #ffffff;border-radius:25px;
+  padding:25px;box-shadow:0 14px 45px #35406c0c;
+}
+.voice-panel{text-align:center;min-height:280px}
+.voice-orb{
+  margin:20px auto 17px;width:112px;height:112px;border-radius:50%;
+  display:grid;place-items:center;color:white;font-size:40px;
+  background:linear-gradient(145deg,#6377ff,#9c6ce9);
+  box-shadow:0 0 0 12px #edf0ff,0 0 0 23px #f5f6ff;
+  transition:.3s;
+}
+.voice-orb.active{animation:pulse 1.5s infinite;background:linear-gradient(145deg,#ff8978,#ffb06d)}
+@keyframes pulse{50%{box-shadow:0 0 0 17px #ffe9e5,0 0 0 30px #fff4f1;transform:scale(1.04)}}
+.status{font-weight:800;font-size:17px;margin:12px 0 7px}
+.hint{font-size:13px;color:var(--muted)}
+.language-line{margin-top:20px;display:flex;justify-content:center;gap:9px;flex-wrap:wrap}
+.language-tag{background:#edf0ff;color:#4c5fdf;padding:9px 14px;border-radius:30px;font-size:12px;font-weight:800}
+.lesson-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px}
+.lesson-head h2{font-size:19px;margin:0}
+.level{background:#e9fbf4;color:#0b9d71;padding:7px 11px;border-radius:20px;font-size:11px;font-weight:900}
+.lesson-section{padding:17px 18px;border-radius:17px;margin-top:12px}
+.lesson-section small{font-size:10px;font-weight:900;letter-spacing:1.2px;display:block;margin-bottom:9px}
+.target{background:#eef0ff;border:1px solid #e2e6ff}
+.target small{color:#5267ed}
+.target .content{font-size:25px;font-weight:800;line-height:1.4}
+.english{background:#fff1ed}.english small{color:#ee765f}
+.explanation{background:#effbf6}.explanation small{color:#119c73}
+.pronunciation{background:#fff8e9}.pronunciation small{color:#b78324}
+.practice{background:#f4efff}.practice small{color:#8754d9}
+.content{font-size:14px;line-height:1.65;white-space:pre-wrap}
+.side-title{font-size:17px;font-weight:850;margin:0 0 17px}
+.step{display:flex;gap:12px;margin:18px 0;align-items:flex-start}
+.step-icon{width:34px;height:34px;border-radius:12px;background:#eff1ff;display:grid;place-items:center;flex-shrink:0}
+.step strong{font-size:13px;display:block;margin:2px 0 5px}
+.step p{margin:0;font-size:12px;color:var(--muted);line-height:1.5}
+.tip{margin-top:24px;background:#fff5e9;padding:16px;border-radius:16px;font-size:12px;line-height:1.6;color:#87632c}
+.history{margin-top:22px}
+.history h3{font-size:15px;margin:0 0 13px}
+.message{padding:13px 15px;border-radius:15px;background:#f5f6fc;margin:9px 0;font-size:13px;line-height:1.5}
+.message.user{background:#edf0ff;margin-left:35px}
+.message.ai{background:#effbf6;margin-right:35px}
+footer{text-align:center;color:#999db0;font-size:11px;margin-top:28px}
+.chat-form{display:flex;gap:10px;margin-top:18px}
+.chat-form input{flex:1;min-width:0;border:1px solid #e3e6f3;background:#fafbff;border-radius:14px;padding:14px 16px;font-size:14px;outline:none;color:#202344}
+.chat-form input:focus{border-color:#6377ff;box-shadow:0 0 0 3px #6377ff18}
+.chat-form button{border:0;border-radius:14px;padding:0 20px;background:linear-gradient(135deg,#5267ed,#8967e8);color:white;font-weight:800;cursor:pointer}
+.chat-form button:hover{filter:brightness(1.06)}
+.typing-hint{text-align:center;color:#969bb0;font-size:11px;margin-top:10px}
+@media(max-width:760px){'
+ header{padding:17px}.layout{grid-template-columns:1fr}
+ main{margin-top:8px;padding:0 14px}.hero{margin:15px 0 23px}
+ .panel{padding:19px}.pill{font-size:10px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><div class="logo">文</div>LinguaBridge AI</div>
+  <div class="pill">✦ YOUR PERSONAL AI COACH</div>
+</header>
+<main>
+  <section class="hero">
+    <div class="eyebrow">LEARN A LANGUAGE BY SPEAKING</div>
+    <h1>Speak English. <span>Learn anything.</span></h1>
+    <div class="subtitle">Your friendly voice coach helps you learn a new language,<br>one natural conversation at a time.</div>
+  </section>
+
+  <div class="layout">
+    <div>
+      <section class="panel voice-panel">
+        <div class="voice-orb" id="orb">🎙️</div>
+        <div class="status" id="status">Your AI coach is getting ready...</div>
+        <div class="hint" id="hint">Allow microphone access when your browser asks.</div>
+        <div class="language-line">
+          <span class="language-tag">🇬🇧 English · Your language</span>
+          <span class="language-tag" id="targetTag">🌍 Choose your new language by speaking</span>
+        </div>
+      </section>
+
+      <section class="panel history">
+        <div class="lesson-head">
+          <h2>Your conversation</h2>
+          <span class="level" id="lessonCount">LESSON 0</span>
+        </div>
+        <div id="conversation">
+          <div class="message ai">Hello! I'll help you learn a new language using English explanations. First, tell me which language you want to learn.</div>
+        </div>
+        <form id="chatForm" class="chat-form">
+          <input id="chatInput" type="text" placeholder="Type your message in English..." autocomplete="off">
+          <button id="sendButton" type="submit">Send ➤</button>
+        </form>
+        <div class="typing-hint">⌨️ Type a message or 🎙️ speak naturally — both work!</div>
+      </section>
+    </div>
+
+    <aside class="panel">
+      <h2 class="side-title">Your learning card ✨</h2>
+      <div class="lesson-section target">
+        <small>01 · NEW LANGUAGE</small>
+        <div class="content" id="targetText">Your new sentence will appear here.</div>
+      </div>
+      <div class="lesson-section english">
+        <small>02 · ENGLISH MEANING</small>
+        <div class="content" id="englishText">Understand exactly what it means in English.</div>
+      </div>
+      <div class="lesson-section explanation">
+        <small>03 · SIMPLE EXPLANATION</small>
+        <div class="content" id="explanationText">I'll explain the words and grammar in easy English.</div>
+      </div>
+      <div class="lesson-section pronunciation">
+        <small>04 · HOW TO PRONOUNCE</small>
+        <div class="content" id="pronunciationText">Pronunciation written using English letters.</div>
+      </div>
+      <div class="lesson-section practice">
+        <small>05 · YOUR PRACTICE</small>
+        <div class="content" id="practiceText">You'll get a little speaking challenge.</div>
+      </div>
+    </aside>
+  </div>
+
+  <section class="panel" style="margin-top:22px">
+    <h2 class="side-title">How your coach teaches you 🌱</h2>
+    <div class="step"><div class="step-icon">🗣️</div><div><strong>You speak in English</strong><p>Ask questions naturally. No need to know the new language.</p></div></div>
+    <div class="step"><div class="step-icon">🌍</div><div><strong>Learn the new language</strong><p>Hear the correct sentence spoken in your chosen language.</p></div></div>
+    <div class="step"><div class="step-icon">💡</div><div><strong>Understand in English</strong><p>Get the translation, vocabulary, grammar and pronunciation in English.</p></div></div>
+    <div class="step"><div class="step-icon">🎯</div><div><strong>Practice by speaking</strong><p>Your coach gives you a small exercise and listens to your answer.</p></div></div>
+    <div class="tip">💛 <strong>Beginner-friendly promise:</strong> You can say “Explain in English”, “Speak slowly”, or “Give me another example” whenever you need help.</div>
+  </section>
+  <footer>LinguaBridge AI · Powered by your local AI assistant</footer>
+</main>
+
+<script>
+const languages = {
+ german:{name:"German",code:"de-DE"}, french:{name:"French",code:"fr-FR"},
+ spanish:{name:"Spanish",code:"es-ES"}, italian:{name:"Italian",code:"it-IT"},
+ dutch:{name:"Dutch",code:"nl-NL"}, portuguese:{name:"Portuguese",code:"pt-PT"},
+ japanese:{name:"Japanese",code:"ja-JP"}, korean:{name:"Korean",code:"ko-KR"},
+ chinese:{name:"Chinese",code:"zh-CN"}, mandarin:{name:"Chinese",code:"zh-CN"},
+ hindi:{name:"Hindi",code:"hi-IN"}, tamil:{name:"Tamil",code:"ta-IN"},
+ arabic:{name:"Arabic",code:"ar-SA"}, russian:{name:"Russian",code:"ru-RU"},
+ bengali:{name:"Bengali",code:"bn-IN"}, telugu:{name:"Telugu",code:"te-IN"},
+ marathi:{name:"Marathi",code:"mr-IN"}, kannada:{name:"Kannada",code:"kn-IN"},
+ malayalam:{name:"Malayalam",code:"ml-IN"}
+};
+
+let targetLanguage = null;
+let recognition = null;
+let speaking = false;
+let listening = false;
+let busy = false;
+let started = false;
+let gestureUsed = false;
+let lessonNumber = 0;
+let practiceMode = false;
+let voices = [];
+
+const $ = id => document.getElementById(id);
+function setStatus(title,hint,active=false){
+  $("status").textContent=title;
+  $("hint").textContent=hint;
+  $("orb").classList.toggle("active",active);
+}
+function addMessage(text,type){
+  const el=document.createElement("div");
+  el.className="message "+type;
+  el.textContent=text;
+  $("conversation").appendChild(el);
+  el.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+function detectLanguage(text){
+  const t=text.toLowerCase();
+  for(const key of Object.keys(languages)){
+    if(new RegExp("\\b"+key+"\\b","i").test(t)) return languages[key];
+  }
+  return null;
+}
+function updateLanguage(lang){
+  targetLanguage=lang;
+  $("targetTag").textContent="🌍 Learning "+lang.name;
+}
+function chooseVoice(code){
+  voices=speechSynthesis.getVoices();
+  const base=code.split("-")[0].toLowerCase();
+  return voices.find(v=>v.lang.toLowerCase()===code.toLowerCase())
+    || voices.find(v=>v.lang.toLowerCase().startsWith(base))
+    || null;
+}
+function speakOne(text,code,rate){
+  return new Promise(resolve=>{
+    if(!text){resolve();return;}
+    const utterance=new SpeechSynthesisUtterance(text);
+    utterance.lang=code;
+    utterance.rate=rate || (code==="en-US" ? 0.82 : 0.72);
+    utterance.pitch=1.0;
+    utterance.volume=0.85;
+    const voice=chooseVoice(code);
+    if(voice) utterance.voice=voice;
+    utterance.onend=resolve;
+    utterance.onerror=resolve;
+    speechSynthesis.speak(utterance);
+  });
+}
+
+async function speakLesson(parts){
+  if(speaking) return;
+
+  speaking = true;
+  busy = true;
+  practiceMode = false;
+  stopListening();
+  speechSynthesis.cancel();
+
+  setStatus("Listen carefully...", "German first, English meaning second, then repeat.", true);
+
+  try {
+    await speakOne(parts.target, targetLanguage.code, 0.68);
+    await speakOne("In English, it means: " + parts.english, "en-US", 0.80);
+    await speakOne("Pronunciation. Listen slowly: " + parts.pronunciation, "en-US", 0.65);
+    await speakOne("Now repeat the German sentence. I am listening.", "en-US", 0.78);
+  } catch(error) {
+    console.error("Lesson speech error:", error);
+  } finally {
+    speaking = false;
+    busy = false;
+    practiceMode = true;
+    setStatus("Your turn! Speak " + targetLanguage.name, "Repeat the sentence. I will check the recognized words.", true);
+    startListening();
+  }
+}
+function extract(text,label){
+  const labels=["TARGET","ENGLISH","EXPLANATION","PRONUNCIATION","PRACTICE"];
+  const start=text.search(new RegExp("^\\s*"+label+"\\s*:\\s*","im"));
+  if(start<0)return "";
+  const after=text.slice(start).replace(new RegExp("^\\s*"+label+"\\s*:\\s*","i"),"");
+  const next=after.search(/^\s*(TARGET|ENGLISH|EXPLANATION|PRONUNCIATION|PRACTICE)\s*:/im);
+  return (next>=0?after.slice(0,next):after).trim();
+}
+function parseLesson(raw){
+  return {
+    target:extract(raw,"TARGET"),
+    english:extract(raw,"ENGLISH"),
+    explanation:extract(raw,"EXPLANATION"),
+    pronunciation:extract(raw,"PRONUNCIATION"),
+    practice:extract(raw,"PRACTICE")
+  };
+}
+function showLesson(p){
+  $("targetText").textContent=p.target||"Let's learn a new sentence.";
+  $("englishText").textContent=p.english||"";
+  $("explanationText").textContent=p.explanation||"";
+  $("pronunciationText").textContent=p.pronunciation||"";
+  $("practiceText").textContent=p.practice||"";
+  lessonNumber++;
+  $("lessonCount").textContent="LESSON "+lessonNumber;
+}
+async function askAI(userText){
+  busy=true;stopListening();
+  setStatus("Thinking about your lesson...","Your AI coach is preparing an answer.",true);
+  const prompt=`You are LinguaBridge, a friendly beginner ${targetLanguage.name} teacher.
+The student speaks English and is learning ${targetLanguage.name}.
+Student request: "${userText}"
+
+IMPORTANT:
+Understand what the student wants, not just the literal words.
+If the student says something incomplete such as "Tell me a simple sentence for", give one useful everyday beginner sentence in ${targetLanguage.name}. Do NOT translate that incomplete request.
+If the student asks a question, answer it by teaching a useful ${targetLanguage.name} example.
+If the student explicitly asks to translate exact words or a sentence, translate those words accurately.
+Keep the lesson short and practical.
+
+Return exactly these five sections:
+TARGET: One natural beginner ${targetLanguage.name} sentence.
+ENGLISH: Its accurate English meaning.
+EXPLANATION: A very short simple English explanation.
+PRONUNCIATION: A readable pronunciation guide using English letters.
+PRACTICE: Tell the student in English to repeat the TARGET sentence.
+
+Do not translate the student's command unless they explicitly ask for its translation.
+Do not add greetings or unrelated content.`;
+  try{
+    const response=await fetch("/chat",{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({prompt})
+    });
+    if(!response.ok)throw new Error("AI server returned "+response.status);
+    const data=await response.json();
+    const raw=data.response||"";
+    const p=parseLesson(raw);
+    if(!p.target&&!p.english){
+      p.target="Let's try a simple sentence.";
+      p.english=raw;
+      p.explanation="Your coach has shared an explanation. Ask for an example if you need one.";
+      p.pronunciation="Ask me to repeat the sentence for pronunciation.";
+      p.practice="Tell me what you would like to practise next.";
+    }
+    showLesson(p);
+    addMessage("New "+targetLanguage.name+" lesson: "+p.target,"ai");
+    await speakLesson(p);
+  }catch(error){
+    console.error(error);
+    busy=false;
+    setStatus("I couldn't reach the AI server","Check that your LinguaBridge server and Ollama are running.",false);
+    addMessage("I couldn't connect to the AI server. Please check that the local server is running.","ai");
+    startListening();
+  }
+}
+async function handleSpeech(text){
+  const clean=text.trim();
+  if(!clean || busy || speaking)return;
+
+  busy=true;
+  listening=false;
+  addMessage(clean,"user");
+
+  if(!targetLanguage){
+    const found=detectLanguage(clean);
+    if(found){
+      updateLanguage(found);
+      addMessage("Wonderful! Let's learn "+found.name+" together. I'll explain everything in English.","ai");
+      await speakOne("Wonderful! Let's learn "+found.name+". I'll speak the new language and explain everything in English. Let's begin!","en-US");
+    }else{
+      await speakOne("Which language would you like to learn? Please say a language name, such as German, French, Spanish, Japanese, Hindi or Tamil.","en-US");
+    }
+    busy=false;
+    startListening();
+    return;
+  }
+
+  const switchMatch=clean.match(/(?:switch|change|learn|speak)\s+(?:to\s+)?([a-z]+)/i);
+  const found=detectLanguage(clean);
+  if(found && (switchMatch || /change.*language|switch.*language/i.test(clean))){
+    updateLanguage(found);
+    await speakOne("Of course! Your new language is "+found.name+". Let's continue learning together.","en-US");
+    busy=false;
+    startListening();
+    return;
+  }
+
+  busy=false;
+  await askAI(clean);
+}
+function stopListening(){
+  if(recognition && listening){
+    try{recognition.stop()}catch(e){}
+  }
+  listening=false;
+}
+function startListening(){
+  if(!recognition || speaking || busy || listening) return;
+
+  try{
+    recognition.lang = practiceMode && targetLanguage
+      ? targetLanguage.code
+      : "en-US";
+
+    listening = true;
+
+    if(practiceMode){
+      setStatus("Repeat the sentence in "+targetLanguage.name,
+        "I'm listening to your pronunciation.",true);
+    }else{
+      setStatus("I'm listening to you...",
+        "Speak naturally in English.",true);
+    }
+
+    recognition.start();
+  }catch(error){
+    listening = false;
+    console.error("Microphone start error:",error);
+  }
+}
+async function checkPronunciation(spokenText){
+  practiceMode = false;
+  busy = true;
+
+  addMessage("Your practice attempt: " + spokenText, "user");
+  setStatus("Checking your attempt...", "Comparing your words with the lesson.", true);
+
+  try {
+    const expectedSentence = $("targetText").textContent;
+
+    const prompt = `You are a kind ${targetLanguage.name} language teacher.
+The student understands English.
+
+Expected ${targetLanguage.name} sentence:
+"${expectedSentence}"
+
+Words recognized by the microphone:
+"${spokenText}"
+
+Compare the two sentences.
+Give feedback ONLY in simple English.
+Say whether the recognized words match the expected sentence.
+If they do not match, show the correct ${targetLanguage.name} sentence and explain the difference briefly.
+Be encouraging and honest.
+Important: You only have a speech-recognition transcript. Do not claim to measure the student's exact accent or pronunciation sounds.`;
+
+    const response = await fetch("/chat", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({prompt})
+    });
+
+    if (!response.ok) throw new Error("AI server error: " + response.status);
+
+    const data = await response.json();
+    const feedback = data.response || "I could not check your attempt.";
+
+    addMessage(feedback, "ai");
+
+    busy = false;
+    await speakOne(feedback, "en-US", 0.80);
+
+  } catch(error) {
+    console.error("Practice check error:", error);
+    busy = false;
+    const message = "I couldn't check your attempt. Let's continue in English. Please try again.";
+    addMessage(message, "ai");
+    await speakOne(message, "en-US", 0.80);
+  } finally {
+    practiceMode = false;
+    speaking = false;
+    busy = false;
+    setStatus("I'm listening in English", "Ask another question or request another sentence.", false);
+    startListening();
+  }
+}function setupRecognition(){
+  const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SpeechRecognition){
+    setStatus("Voice recognition isn't available","Please use the latest Microsoft Edge or Google Chrome.",false);
+    return;
+  }
+  recognition=new SpeechRecognition();
+  recognition.lang="en-US";
+  recognition.continuous=false;
+  recognition.interimResults=false;
+  recognition.maxAlternatives=1;
+  recognition.onresult=event=>{
+    const result=event.results[event.results.length-1];
+    const transcript=result[0].transcript.trim();
+
+    if(!transcript || transcript.length<2) return;
+
+    listening=false;
+
+    if(practiceMode){
+      checkPronunciation(transcript);
+    }else{
+      handleSpeech(transcript);
+    }
+  };
+  recognition.onerror=event=>{
+    listening=false;
+    if(event.error==="not-allowed"){
+      setStatus("Microphone permission needed","Allow microphone access in your browser settings.",false);
+    }else if(event.error!=="no-speech"&&event.error!=="aborted"){
+      setStatus("Let's try again","Speak clearly in English.",false);
+    }
+  };
+  recognition.onend=()=>{
+    listening=false;
+    if(!speaking&&!busy&&started)setTimeout(startListening,800);
+  };
+}
+async function startAssistant(){
+  if(started)return;
+  started=true;
+  setupRecognition();
+  setStatus("Welcome to LinguaBridge!","I'll speak English first. Tell me which language you'd like to learn.",false);
+  try{
+    await speakOne("Hello! Welcome to LinguaBridge AI. I am your personal language coach. Which language would you like to learn?","en-US");
+    startListening();
+  }catch(e){
+    setStatus("Tap anywhere once to begin","Your browser needs one interaction before it can play audio.",false);
+  }
+}
+$("chatForm").addEventListener("submit",async event=>{
+  event.preventDefault();
+  const input=$("chatInput");
+  const message=input.value.trim();
+  if(!message || busy || speaking)return;
+  input.value="";
+  stopListening();
+  await handleSpeech(message);
+});
+
+document.addEventListener("click",()=>{
+  if(gestureUsed)return;
+  gestureUsed=true;
+  if(!speaking&&!listening){
+    if(!started)startAssistant();
+    else{
+      speakOne("Hello! Which language would you like to learn?","en-US").then(startListening);
+    }
+  }
+},{once:true});
+window.addEventListener("load",()=>setTimeout(startAssistant,900));
+</script>
+</body>
+</html>
+
+
+
+
+
+
