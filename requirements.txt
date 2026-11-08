@@ -3,3 +3,6 @@ deep-translator
 gTTS
 python-dotenv
 requests
+
+flask
+gunicorn
